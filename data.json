@@ -1,6 +1,6 @@
 {
   "generated_at": "2026-06-10",
-  "next_gate": { "label": "Pre-release Weekly (QA gate)", "date": "2026-06-14" },
+  "next_gate": { "label": "Rollout Gate — Thu (QA + readiness gate)", "date": "2026-06-11" },
   "releases_upcoming": [
     {
       "name": "Billing v3",
@@ -38,13 +38,13 @@
       "release_date": "2026-06-15",
       "owner": "Amor (Senior Engineer)",
       "risk": "at_risk",
-      "risk_label": "AT RISK — likely to slip",
-      "confidence": 30,
+      "risk_label": "AT RISK — must clear Thu gate",
+      "confidence": 25,
       "completion_pct": 40,
       "progress": { "total": 2, "shipped": 0, "in_qa": 0, "code_review": 2, "in_progress": 0, "todo": 0 },
       "open_items": "2 items in code review — not yet staged, QA not started",
       "slippage": { "original": "2026-05-18", "postponements": 1, "slip_days": 28, "log": "May 18 → Jun 15" },
-      "reason": "Both work items still in code review 4 days before the Sun Jun 14 QA gate — needs review, staging, and a clean QA pass with no findings to make Jun 15.",
+      "reason": "Both work items still in code review with the Thursday (Jun 11) Rollout Gate one day away — they must clear review, stage, and pass QA at the gate to make the Jun 15 Monday release; unlikely on current state.",
       "summary": "Redesigned conversations view in the Inbox — faster load, cleaner threading, and improved agent ergonomics for high-volume teams."
     }
   ],
@@ -67,5 +67,5 @@
     { "feature": "DM AI Agent Typing Indicator","docs": "pending", "gtm": "done",    "rollout": "n/a",     "global": "n/a" },
     { "feature": "TikTok Channel Integration",  "docs": "done",    "gtm": "pending", "rollout": "n/a",     "global": "n/a" }
   ],
-  "methodology": "Risk and confidence are computed from Jira QA gates: weighted completion across work items (Released 1.0, Pre-release 0.95, QA-passed 0.85, in QA 0.6, code review 0.4, in progress 0.25, to do 0), minus penalties for past postponements and unstaged work close to the Sunday QA gate. A release must be QA-passed on staging before the Pre-release Weekly call to ship that cycle."
+  "methodology": "Risk and confidence are computed from Jira QA gates: weighted completion across work items (Released 1.0, Pre-release 0.95, QA-passed 0.85, in QA 0.6, code review 0.4, in progress 0.25, to do 0), minus penalties for past postponements and unstaged work close to the Thursday Rollout Gate. To ship, a release must be QA-passed on staging and approved at the Thursday Rollout Gate; the deployment team then pushes it live at the following Monday Release Rundown."
 }
