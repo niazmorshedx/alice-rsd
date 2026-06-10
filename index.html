@@ -13,7 +13,7 @@
   --green: #1a7f5a; --green-bg: #e3f2ec; --green-tx: #115c40;
   --amber: #b45309; --amber-bg: #fdf0dc; --amber-tx: #8a4a06;
   --red: #c8442c; --red-bg: #fae7e2; --red-tx: #9c3015;
-  --chip: #f1efe9;
+  --chip: #f1efe9; --blue-bg: #e7edfd; --blue-tx: #1e4fc4;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -22,7 +22,7 @@
     --green: #3dbd8d; --green-bg: #1d3a2f; --green-tx: #7fdcb6;
     --amber: #e8a33d; --amber-bg: #3c2f17; --amber-tx: #f0c581;
     --red: #e5684a; --red-bg: #42201a; --red-tx: #f0a08c;
-    --chip: #2c2b22;
+    --chip: #2c2b22; --blue-bg: #1c2740; --blue-tx: #9bb9f5;
   }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -68,15 +68,13 @@ th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: v
 tr:last-child td { border-bottom: none; }
 td .cellchip { font-size: 11.5px; font-weight: 650; padding: 2px 10px; border-radius: 9px; display: inline-block; }
 .c-done { background: var(--green-bg); color: var(--green-tx); }
-.c-pending { background: var(--amber-bg); color: var(--amber-tx); }
+.c-pending { background: var(--chip); color: var(--accent); }
 .c-urgent { background: var(--red-bg); color: var(--red-tx); }
 .c-active { background: var(--green-bg); color: var(--green-tx); }
 .c-na { color: var(--subtle); }
-.c-inprogress { background: var(--chip); color: var(--accent); }
+.c-inprogress { background: var(--blue-bg); color: var(--blue-tx); }
 .c-blocked { background: var(--red-bg); color: var(--red-tx); }
 .c-reverted { background: var(--chip); color: var(--muted); }
-.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 11.5px; color: var(--muted); margin: 2px 0; align-items: center; }
-.legend .cellchip { font-size: 11px; }
 .shipped { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .ship { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 13px 16px; }
 .ship .n { font-weight: 650; font-size: 14px; }
@@ -115,7 +113,6 @@ td .cellchip { font-size: 11.5px; font-weight: 650; padding: 2px 10px; border-ra
   <div class="section-h">Upcoming Releases</div>
   <div id="cards" style="display:grid;gap:14px;"></div>
   <div class="section-h">Release Pipeline — Stage Status <span style="text-transform:none;letter-spacing:0;font-weight:600;color:var(--subtle);">(GTM / CS readiness)</span></div>
-  <div class="legend" id="boardLegend"></div>
   <div style="overflow-x:auto;"><table id="boardTable"><thead><tr><th>Release Item</th><th>Handoff</th><th>Beta&nbsp;FB</th><th>Phased</th><th>GTM</th><th>Docs</th><th>Global</th><th>Retro</th></tr></thead><tbody></tbody></table></div>
   <div class="section-h">In Beta / Phased Rollout (pre-release)</div>
   <div class="shipped" id="shipped"></div>
@@ -192,9 +189,6 @@ function render(DATA) {
 
   var chipMap = { done: ["c-done", "done"], "in-progress": ["c-inprogress", "in progress"], pending: ["c-pending", "pending"], blocked: ["c-blocked", "blocked"], reverted: ["c-reverted", "reverted"], na: ["c-na", "—"] };
   function chip(v) { var m = chipMap[v] || chipMap["na"]; return m[0] === "c-na" ? '<span class="c-na">—</span>' : '<span class="cellchip ' + m[0] + '">' + m[1] + "</span>"; }
-  var legendHtml = "";
-  ["done", "in-progress", "pending", "blocked", "reverted"].forEach(function(k) { legendHtml += '<span>' + chip(k) + "</span>"; });
-  document.getElementById("boardLegend").innerHTML = legendHtml;
   var brows = "";
   DATA.pipeline_board.items.forEach(function(it) {
     brows += "<tr><td><strong>" + esc(it.feature) + "</strong></td>" + it.cells.map(function(c) { return "<td>" + chip(c) + "</td>"; }).join("") + "</tr>";
