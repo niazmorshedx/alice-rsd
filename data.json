@@ -62,18 +62,24 @@
     { "name": "Ecommerce Product Recommendation (Phase 1)", "release_date": "2026-04-22" },
     { "name": "Inbox AI Agent Queue", "release_date": "2026-03-29" }
   ],
-  "gtm_readiness": [
-    { "feature": "Billing v3",                  "docs": "urgent",  "gtm": "done",    "rollout": "n/a",     "global": "pending" },
-    { "feature": "RBAC Direct URL Navigation",  "docs": "urgent",  "gtm": "done",    "rollout": "n/a",     "global": "pending" },
-    { "feature": "Raven AI Performance Reports","docs": "urgent",  "gtm": "pending", "rollout": "n/a",     "global": "pending" },
-    { "feature": "Draft Message Retention",     "docs": "urgent",  "gtm": "done",    "rollout": "n/a",     "global": "pending" },
-    { "feature": "Inbox Conversations v2",      "docs": "pending", "gtm": "done",    "rollout": "pending", "global": "n/a" },
-    { "feature": "WhatsApp Username (BSUID)",   "docs": "urgent",  "gtm": "pending", "rollout": "active",  "global": "pending" },
-    { "feature": "Meta Partner-led Bus. Verif.","docs": "urgent",  "gtm": "pending", "rollout": "active",  "global": "pending" },
-    { "feature": "AI Agent Ecommerce",          "docs": "pending", "gtm": "done",    "rollout": "active",  "global": "n/a" },
-    { "feature": "AI Agent Inactivity v2",      "docs": "pending", "gtm": "done",    "rollout": "n/a",     "global": "n/a" },
-    { "feature": "DM AI Agent Typing Indicator","docs": "pending", "gtm": "done",    "rollout": "n/a",     "global": "n/a" },
-    { "feature": "TikTok Channel Integration",  "docs": "done",    "gtm": "pending", "rollout": "n/a",     "global": "n/a" }
-  ],
+  "pipeline_board": {
+    "stages": ["Handoff", "Beta Feedback", "Phased Rollout", "GTM Briefing", "Release Docs", "Global Release", "Release Retro"],
+    "items": [
+      { "feature": "Livechat & Rec. UI/UX", "cells": ["done", "pending", "na", "na", "na", "na", "na"] },
+      { "feature": "Inbox Conversations v2", "cells": ["done", "na", "pending", "pending", "na", "na", "na"] },
+      { "feature": "TikTok Channel Integration", "cells": ["done", "na", "na", "pending", "done", "done", "pending"] },
+      { "feature": "AI Performance Reports", "cells": ["done", "done", "done", "pending", "na", "pending", "pending"] },
+      { "feature": "WhatsApp Username", "cells": ["done", "na", "done", "pending", "na", "pending", "na"] },
+      { "feature": "Meta PLBV", "cells": ["done", "na", "done", "pending", "na", "pending", "na"] },
+      { "feature": "RBAC Direct URL Navigation", "cells": ["done", "na", "na", "done", "in-progress", "in-progress", "na"] },
+      { "feature": "Billing v3", "cells": ["done", "na", "na", "done", "in-progress", "in-progress", "na"] },
+      { "feature": "AI Agent Inactivity Settings v2", "cells": ["done", "na", "na", "na", "na", "blocked", "na"] },
+      { "feature": "DM AI Agent Typing Indicator", "cells": ["done", "na", "na", "na", "na", "pending", "na"] },
+      { "feature": "AI Agent Ecommerce", "cells": ["done", "na", "in-progress", "na", "na", "na", "na"] },
+      { "feature": "Draft Message Retention", "cells": ["done", "na", "reverted", "na", "na", "na", "na"] },
+      { "feature": "Email AI Agent", "cells": ["done", "na", "done", "done", "done", "done", "pending"] },
+      { "feature": "Community AI Agent", "cells": ["done", "na", "done", "done", "done", "done", "pending"] }
+    ]
+  },
   "methodology": "Risk and confidence are computed from Jira QA gates: weighted completion across work items (Released 1.0, Pre-release 0.95, QA-passed 0.85, in QA 0.6, code review 0.4, in progress 0.25, to do 0), minus penalties for past postponements and unstaged work close to the Thursday Rollout Gate. To ship, a release must be QA-passed on staging and approved at the Thursday Rollout Gate; the Sunday Release Rundown is the final go-no-go, and the deployment team pushes it live early the following Monday morning. Jira version state maps to rollout: unreleased = in progress, released = in beta / pre-release, archived = globally released (GA)."
 }

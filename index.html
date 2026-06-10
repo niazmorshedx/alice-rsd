@@ -72,6 +72,11 @@ td .cellchip { font-size: 11.5px; font-weight: 650; padding: 2px 10px; border-ra
 .c-urgent { background: var(--red-bg); color: var(--red-tx); }
 .c-active { background: var(--green-bg); color: var(--green-tx); }
 .c-na { color: var(--subtle); }
+.c-inprogress { background: var(--chip); color: var(--accent); }
+.c-blocked { background: var(--red-bg); color: var(--red-tx); }
+.c-reverted { background: var(--chip); color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 11.5px; color: var(--muted); margin: 2px 0; align-items: center; }
+.legend .cellchip { font-size: 11px; }
 .shipped { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .ship { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 13px 16px; }
 .ship .n { font-weight: 650; font-size: 14px; }
@@ -109,8 +114,9 @@ td .cellchip { font-size: 11.5px; font-weight: 650; padding: 2px 10px; border-ra
   <div class="hero" id="hero"></div>
   <div class="section-h">Upcoming Releases</div>
   <div id="cards" style="display:grid;gap:14px;"></div>
-  <div class="section-h">GTM &amp; CS Readiness — will you get what you need on time?</div>
-  <div style="overflow-x:auto;"><table id="gtmTable"><thead><tr><th>Feature</th><th>Release Docs</th><th>GTM Briefing</th><th>Phased Rollout</th><th>Global Release</th></tr></thead><tbody></tbody></table></div>
+  <div class="section-h">Release Pipeline — Stage Status <span style="text-transform:none;letter-spacing:0;font-weight:600;color:var(--subtle);">(GTM / CS readiness)</span></div>
+  <div class="legend" id="boardLegend"></div>
+  <div style="overflow-x:auto;"><table id="boardTable"><thead><tr><th>Release Item</th><th>Handoff</th><th>Beta&nbsp;FB</th><th>Phased</th><th>GTM</th><th>Docs</th><th>Global</th><th>Retro</th></tr></thead><tbody></tbody></table></div>
   <div class="section-h">In Beta / Phased Rollout (pre-release)</div>
   <div class="shipped" id="shipped"></div>
   <div class="section-h">Globally Released (GA)</div>
@@ -141,11 +147,12 @@ function render(DATA) {
   var missed = up.filter(function(r){ return r.risk === "missed" || r.risk === "failing"; }).length;
   var atRisk = up.filter(function(r){ return r.risk === "at_risk"; }).length;
   var onTrack = up.filter(function(r){ return r.risk === "on_track"; }).length;
-  var urgentDocs = DATA.gtm_readiness.filter(function(g){ return g.docs === "urgent"; }).length;
+  var gtmIdx = DATA.pipeline_board.stages.indexOf("GTM Briefing");
+  var gtmPending = DATA.pipeline_board.items.filter(function(it){ return it.cells[gtmIdx] === "pending"; }).length;
   var heroHtml = "";
   heroHtml += '<div class="cell"><div class="k">Next QA gate</div><div class="v">' + fmtDate(DATA.next_gate.date) + '</div><div class="s">' + (gateIn >= 0 ? "T−" + gateIn + " days · " : "") + esc(DATA.next_gate.label) + "</div></div>";
   heroHtml += '<div class="cell"><div class="k">Upcoming releases</div><div class="v">' + up.length + '</div><div class="s">' + missed + " missed · " + atRisk + " at risk · " + onTrack + " on track</div></div>";
-  heroHtml += '<div class="cell"><div class="k">GTM / CS attention</div><div class="v">' + urgentDocs + '</div><div class="s">release docs urgently pending</div></div>';
+  heroHtml += '<div class="cell"><div class="k">GTM / CS attention</div><div class="v">' + gtmPending + '</div><div class="s">GTM briefings pending</div></div>';
   document.getElementById("hero").innerHTML = heroHtml;
 
   var cards = "";
@@ -183,13 +190,16 @@ function render(DATA) {
   });
   document.getElementById("cards").innerHTML = cards;
 
-  var chipMap = { done: ["c-done", "✓ done"], pending: ["c-pending", "pending"], urgent: ["c-urgent", "needed now"], active: ["c-active", "in progress"], "n/a": ["c-na", "—"] };
-  var rows = "";
-  DATA.gtm_readiness.forEach(function(g) {
-    function cell(v) { var m = chipMap[v] || chipMap["n/a"]; return m[0] === "c-na" ? '<span class="c-na">—</span>' : '<span class="cellchip ' + m[0] + '">' + m[1] + "</span>"; }
-    rows += "<tr><td><strong>" + esc(g.feature) + "</strong></td><td>" + cell(g.docs) + "</td><td>" + cell(g.gtm) + "</td><td>" + cell(g.rollout) + "</td><td>" + cell(g.global) + "</td></tr>";
+  var chipMap = { done: ["c-done", "done"], "in-progress": ["c-inprogress", "in progress"], pending: ["c-pending", "pending"], blocked: ["c-blocked", "blocked"], reverted: ["c-reverted", "reverted"], na: ["c-na", "—"] };
+  function chip(v) { var m = chipMap[v] || chipMap["na"]; return m[0] === "c-na" ? '<span class="c-na">—</span>' : '<span class="cellchip ' + m[0] + '">' + m[1] + "</span>"; }
+  var legendHtml = "";
+  ["done", "in-progress", "pending", "blocked", "reverted"].forEach(function(k) { legendHtml += '<span>' + chip(k) + "</span>"; });
+  document.getElementById("boardLegend").innerHTML = legendHtml;
+  var brows = "";
+  DATA.pipeline_board.items.forEach(function(it) {
+    brows += "<tr><td><strong>" + esc(it.feature) + "</strong></td>" + it.cells.map(function(c) { return "<td>" + chip(c) + "</td>"; }).join("") + "</tr>";
   });
-  document.querySelector("#gtmTable tbody").innerHTML = rows;
+  document.querySelector("#boardTable tbody").innerHTML = brows;
 
   var ship = "";
   DATA.released_recent.forEach(function(s) {
